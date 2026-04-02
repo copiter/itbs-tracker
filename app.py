@@ -7,10 +7,42 @@ from datetime import date
 # =========================
 # KONFIG
 # =========================
-st.set_page_config(page_title="ITBS Tracker", page_icon="🏔️", layout="wide")
+st.set_page_config(
+    page_title="ITBS Tracker",
+    page_icon="🏔️",
+    layout="wide",
+)
 
 TARGET_DATE = date(2026, 6, 16)
 SHEET_NAME = "ITBS Tracker Data"
+
+# =========================
+# STYLE
+# =========================
+st.markdown("""
+<style>
+.stApp {
+    background: linear-gradient(180deg, #08111f 0%, #0c1a31 50%, #102344 100%);
+    color: #eaf2ff;
+}
+
+.block-container {
+    max-width: 1100px;
+    padding-top: 2rem;
+}
+
+h1, h2, h3 {
+    color: #ffffff !important;
+}
+
+.card {
+    background: rgba(255,255,255,0.05);
+    border-radius: 16px;
+    padding: 16px;
+    margin-bottom: 12px;
+}
+</style>
+""", unsafe_allow_html=True)
 
 # =========================
 # GOOGLE SHEETS
@@ -71,33 +103,8 @@ def save_today(did_workout, pain, notes):
 
 
 # =========================
-# PLAN
+# PLAN LOGIKA
 # =========================
-PHASES = {
-    "Faza 1": "Aktywacja i zmniejszenie bólu",
-    "Faza 2": "Stabilność i kontrola",
-    "Faza 3": "Powrót do aktywności"
-}
-
-EXERCISES = {
-    "Faza 1": [
-        "Bridge",
-        "Clamshell",
-        "Side plank"
-    ],
-    "Faza 2": [
-        "Monster walk",
-        "Step-up",
-        "Single-leg balance"
-    ],
-    "Faza 3": [
-        "Lunges",
-        "Single-leg deadlift",
-        "Walking uphill"
-    ]
-}
-
-
 def get_phase():
     days_left = (TARGET_DATE - date.today()).days
 
@@ -109,23 +116,50 @@ def get_phase():
         return "Faza 3"
 
 
+PHASE_INFO = {
+    "Faza 1": "Aktywacja i zmniejszenie bólu",
+    "Faza 2": "Stabilność i kontrola",
+    "Faza 3": "Powrót do aktywności"
+}
+
+EXERCISES = {
+    "Faza 1": [
+        "Bridge (2–3x 12 powtórzeń)",
+        "Clamshell (2–3x 12/strona)",
+        "Side plank (3x 20–30s)",
+    ],
+    "Faza 2": [
+        "Monster walk (2–3 serie)",
+        "Step-up (2–3x 10/strona)",
+        "Single-leg balance (3x 30s)",
+    ],
+    "Faza 3": [
+        "Lunges (2–3x 8/strona)",
+        "Single-leg deadlift (2–3x 8)",
+        "Walking uphill (10–20 min)",
+    ],
+}
+
 # =========================
-# APP
+# HEADER
 # =========================
 st.title("🏔️ ITBS Tracker")
 
 days_left = (TARGET_DATE - date.today()).days
 phase = get_phase()
 
-col1, col2 = st.columns(2)
+col1, col2, col3 = st.columns(3)
 
 with col1:
-    st.metric("Dni do wyjazdu", days_left)
+    st.metric("Dni do wyjazdu", max(days_left, 0))
 
 with col2:
     st.metric("Aktualna faza", phase)
 
-st.info("Ćwicz 3–4 razy w tygodniu. Nie musisz robić wszystkiego codziennie.")
+with col3:
+    st.metric("Plan", PHASE_INFO[phase])
+
+st.info("Ćwicz 3–4 razy w tygodniu. Nie rób wszystkiego codziennie.")
 
 # =========================
 # PLAN NA DZIŚ
@@ -133,25 +167,24 @@ st.info("Ćwicz 3–4 razy w tygodniu. Nie musisz robić wszystkiego codziennie.
 st.subheader("Dziś zrób:")
 
 for ex in EXERCISES[phase]:
-    st.write(f"• {ex}")
+    st.markdown(f"• {ex}")
 
 # =========================
 # CHECK-IN
 # =========================
 st.subheader("Dzisiejszy check-in")
 
-did = st.checkbox("Zrobiłem ćwiczenia")
+did = st.checkbox("Zrobiłem dziś ćwiczenia")
 pain = st.slider("Poziom bólu", 0, 10, 0)
-notes = st.text_area("Notatka")
+notes = st.text_area("Notatka (opcjonalnie)")
 
 if st.button("Zapisz dzień"):
     try:
         save_today(did, pain, notes)
-        st.success("Zapisano do Google Sheets")
+        st.success("Dzień zapisany ✔")
         st.rerun()
     except Exception as e:
         st.error(f"Błąd zapisu: {str(e)}")
-
 
 # =========================
 # DANE
@@ -161,6 +194,27 @@ st.subheader("Twoje dane")
 df = load_data()
 
 if not df.empty:
-    st.dataframe(df.sort_values("date", ascending=False))
+    st.dataframe(df.sort_values("date", ascending=False), use_container_width=True)
+
+    st.markdown("### Podsumowanie")
+
+    total = len(df)
+    done = df["did_workout"].sum()
+    avg_pain = round(df["pain_level"].mean(), 1) if df["pain_level"].notna().any() else "-"
+
+    c1, c2, c3 = st.columns(3)
+
+    c1.metric("Wpisy", total)
+    c2.metric("Ćwiczone dni", int(done))
+    c3.metric("Średni ból", avg_pain)
 else:
     st.warning("Brak danych")
+
+# =========================
+# STOPKA
+# =========================
+st.markdown("""
+---
+Najważniejsze: regularność > ilość.  
+3–4 treningi tygodniowo wystarczą, żeby zrobić progres przed wyjazdem.
+""")
