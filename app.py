@@ -187,12 +187,15 @@ def save_today(did_workout, pain, notes):
             row_index = i
             break
 
-    values = [today, did_workout, pain, notes]
+    values = [[today, did_workout, pain, notes]]
 
     if row_index is not None:
-        sheet.update(range_name=f"A{row_index}:D{row_index}", values=[values])
+        sheet.update(
+            range_name=f"A{row_index}:D{row_index}",
+            values=values
+        )
     else:
-        sheet.append_row(values)
+        sheet.append_rows(values)
 
     return True
 
@@ -486,10 +489,11 @@ with st.container():
 if st.button("Zapisz dzień", use_container_width=True):
     try:
         save_today(did, pain, notes)
+    except Exception as e:
+        st.error(f"Nie udało się zapisać danych: {str(e)}")
+    else:
         st.success("Dzień został zapisany do Google Sheets.")
         st.rerun()
-    except Exception as e:
-        st.error(f"Nie udało się zapisać danych: {e}")
 
 
 # =========================
