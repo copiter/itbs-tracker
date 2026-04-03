@@ -63,41 +63,96 @@ def did_workout_today() -> bool:
 
 MESSAGES = [
     {
-        "subject": "Kolano pyta, czy dziś już ćwiczyłeś 👀",
-        "text": "Pora coś ze sobą zrobić. Góry same się nie wejdą.",
+        "subject": "Kolano sprawdza obecność 👀",
+        "text": "Dziś trening czy znowu ghosting?",
         "html": """
-        <h2>Kolano pyta, czy dziś już ćwiczyłeś 👀</h2>
-        <p>Pora coś ze sobą zrobić.</p>
-        <p><b>Góry same się nie wejdą.</b></p>
+        <h2>Kolano sprawdza obecność 👀</h2>
+        <p>Dziś trening czy znowu ghosting?</p>
+        <p><b>Góry patrzą.</b></p>
         """
     },
     {
-        "subject": "Alarm: bez ćwiczeń będą negocjacje z kolanem 🚨",
-        "text": "Zrób dziś kilka minut roboty, żeby w górach nie prowadzić rozmów kryzysowych z ITBS.",
+        "subject": "Alert ITBS 🚨",
+        "text": "System wykrył brak aktywności. Zalecane: ruszyć pośladek.",
         "html": """
-        <h2>Alarm: bez ćwiczeń będą negocjacje z kolanem 🚨</h2>
-        <p>Zrób dziś kilka minut roboty, żeby w górach nie prowadzić rozmów kryzysowych z ITBS.</p>
+        <h2>Alert ITBS 🚨</h2>
+        <p>System wykrył brak aktywności.</p>
+        <p><b>Zalecenie: ruszyć pośladek.</b></p>
         """
     },
     {
-        "subject": "Pośladek średni sam się nie zrobi 😅",
-        "text": "To tylko chwila ćwiczeń. Netflix i tak poczeka.",
+        "subject": "Twoje kolano ma pytanie 🤨",
+        "text": "Dlaczego jeszcze nie ćwiczyłeś?",
         "html": """
-        <h2>Pośladek średni sam się nie zrobi 😅</h2>
-        <p>To tylko chwila ćwiczeń.</p>
-        <p><b>Netflix i tak poczeka.</b></p>
+        <h2>Twoje kolano ma pytanie 🤨</h2>
+        <p>Dlaczego jeszcze nie ćwiczyłeś?</p>
+        <p><b>Nie wymyślaj, tylko zrób 10 minut.</b></p>
         """
     },
     {
-        "subject": "Ostrzeżenie przed górami ⛰️",
-        "text": "Jeśli dziś odpuścisz, jutro kolano może mieć własne zdanie.",
+        "subject": "Pośladek średni wysłał zgłoszenie 📩",
+        "text": "Czeka na aktywację. Już któryś dzień.",
         "html": """
-        <h2>Ostrzeżenie przed górami ⛰️</h2>
-        <p>Jeśli dziś odpuścisz, jutro kolano może mieć własne zdanie.</p>
+        <h2>Pośladek średni wysłał zgłoszenie 📩</h2>
+        <p>Czeka na aktywację. Już któryś dzień.</p>
+        <p><b>Status: ignorowany.</b></p>
+        """
+    },
+    {
+        "subject": "Breaking news 📰",
+        "text": "Brak ćwiczeń zwiększa szanse na marudzenie w górach.",
+        "html": """
+        <h2>Breaking news 📰</h2>
+        <p>Brak ćwiczeń zwiększa szanse na marudzenie w górach.</p>
+        <p><b>Zrób coś dziś.</b></p>
+        """
+    },
+    {
+        "subject": "To nie spam, to interwencja 😄",
+        "text": "Twoje biodro właśnie straciło cierpliwość.",
+        "html": """
+        <h2>To nie spam, to interwencja 😄</h2>
+        <p>Twoje biodro właśnie straciło cierpliwość.</p>
+        <p><b>5–10 minut ćwiczeń i temat zamknięty.</b></p>
+        """
+    },
+    {
+        "subject": "Raport z przyszłości ⛰️",
+        "text": "Bez ćwiczeń: 'auć'. Z ćwiczeniami: 'ej, jest dobrze'.",
+        "html": """
+        <h2>Raport z przyszłości ⛰️</h2>
+        <p>Bez ćwiczeń: 'auć'.</p>
+        <p>Z ćwiczeniami: 'ej, jest dobrze'.</p>
+        """
+    },
+    {
+        "subject": "Minimalny wysiłek, maksymalny efekt 💪",
+        "text": "Serio, to tylko kilka minut. Nie udawaj.",
+        "html": """
+        <h2>Minimalny wysiłek, maksymalny efekt 💪</h2>
+        <p>Serio, to tylko kilka minut.</p>
+        <p><b>Nie udawaj.</b></p>
+        """
+    },
+    {
+        "subject": "System wykrył lenia 🐌",
+        "text": "Zalecenie: natychmiastowy ruch biodra.",
+        "html": """
+        <h2>System wykrył lenia 🐌</h2>
+        <p>Zalecenie: natychmiastowy ruch biodra.</p>
+        <p><b>Wdrożenie: teraz.</b></p>
+        """
+    },
+    {
+        "subject": "Ostatnie ostrzeżenie przed górami ⚠️",
+        "text": "Jeszcze masz czas, żeby nie żałować.",
+        "html": """
+        <h2>Ostatnie ostrzeżenie przed górami ⚠️</h2>
+        <p>Jeszcze masz czas, żeby nie żałować.</p>
+        <p><b>Zrób trening dziś.</b></p>
         """
     },
 ]
-
 
 def pick_image() -> Path | None:
     if not ASSETS_DIR.exists():
